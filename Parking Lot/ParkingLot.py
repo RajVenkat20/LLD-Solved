@@ -84,13 +84,8 @@ car = Vehicle("Agent47", VehicleType.CAR)
 ticket1 = lot.parkVehicle(car)
 
 if(ticket1):
-    # truck = Vehicle("SamRaj1", VehicleType.TRUCK)
-    # ticket2 = lot.parkVehicle(truck)
-
     time.sleep(1)
-
     payment = lot.unparkVehicle(ticket1)
-    # payment = lot.unparkVehicle(ticket2)
 
     print(f"Vehicle: {ticket1.vehicle.licensePlate} parked at {ticket1.slot.slotId}")
     print(f"Payment: ${payment.amount} for {(payment.paidAt - ticket1.issuedAt).seconds} seconds")
