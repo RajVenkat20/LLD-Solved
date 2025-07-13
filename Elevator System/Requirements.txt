@@ -4,3 +4,9 @@ Core Requirements
 3. Users should be able to request an elevator from any floor and choose a destination.
 4. Elevators should handle multiple requests concurrently and in an optimal order.
 5. System should prioritize requests based on the direction of travel and the proximity of the elevators to the requested floor.
+
+Classes
+1. Direction - Enum to specify UP and DOWN directions.
+2. Request - Represents a user request for an elevator, containing source and destination floors.
+3. Elevator - Represents an individual elevator in the system. Has a capacity limit and maintains a lit of 4 requests. Processes requests concurrently and moves between floors based on the requests.
+4. ElevatorController - Manages multiple elevators and handles user requests. Finds the optimal elevator to serve a request based on proximity of the elevators to the requested floor.
