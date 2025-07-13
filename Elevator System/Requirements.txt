@@ -1,4 +1,6 @@
 Core Requirements
-1. The system should support multiple elevators
-2. Each elevator has a capacity limit and can't exceed it.
-3. 
+1. The system should support multiple elevators.
+2. Each elevator has a capacity limit and cannot exceed it.
+3. Users should be able to request an elevator from any floor and choose a destination.
+4. Elevators should handle multiple requests concurrently and in an optimal order.
+5. System should prioritize requests based on the direction of travel and the proximity of the elevators to the requested floor.
