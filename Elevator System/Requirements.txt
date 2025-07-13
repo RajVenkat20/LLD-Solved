@@ -1,0 +1,4 @@
+Core Requirements
+1. The system should support multiple elevators
+2. Each elevator has a capacity limit and can't exceed it.
+3. 

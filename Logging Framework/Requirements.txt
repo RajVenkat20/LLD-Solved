@@ -1,0 +1,14 @@
+Core Requirements
+1. Should support different log levels such as DEBUG, INFO, WARNING, ERROR, and FATAL.
+2. Should allow logging message with a timestamp, log level, and message content.
+3. Should support multiple output destinations such as console, and file.
+4. Provide a configuration to set log level and output destination.
+5. Should be extensible to accommodate new log levels and output destinations in the future.
+
+Classes
+1. LogLevel - Enum to define the levels
+2. LogMessage - Represents a log message with timestamp, log level, and message content
+3. Logger - The main controller. Allows for setting the configuration, logging the message, and provides convenient methods for each log level
+4. LogAppender - Interface that defines the contract for appending log messages to different output destinations
+5. ConsoleAppender, FileAppender - Concrete implementations of LogAppender
+6. LoggerConfiguration - Holds the configuration settings for the logger, including the log level and the selected log appender
