@@ -1,0 +1,6 @@
+Core Requirements
+1. The parking lot should have multiple levels with certain number of spots.
+2. The parking lot should support different types of vehicles (CARS, BIKES, and TRUCKS).
+3. Each parking spot should be able to accommodate a specific type of vehicles.
+4. Assign a parking spot on vehicle entry and release it when the vehicle exits.
+5. Track availability of spots and provide real-time information

@@ -1,94 +1,124 @@
 from enum import Enum
 import uuid, time
 from datetime import datetime
+from abc import ABC
 
 class VehicleType(Enum):
     CAR = 1
     BIKE = 2
     TRUCK = 3
 
-class Vehicle:
+class Vehicle(ABC):
     def __init__(self, licensePlate, vehicleType):
-        self.licensePlate = licensePlate
-        self.vehicleType = vehicleType
+        self.licensePlate= licensePlate
+        self.type = vehicleType
 
-class ParkingSlot:
-    def __init__(self, slotId, vehicleType):
-        self.slotId = slotId
-        self.vehicleType = vehicleType
-        self.isAvailable = True
+    def getType(self):
+        return self.type
 
-class ParkingFloor:
-    def __init__(self, floorNumber):
-        self.floorNumber = floorNumber
-        self.slots = {vtype: [] for vtype in VehicleType}
+class Car(Vehicle):
+    def __init__(self, licensePlate):
+        super().__init__(licensePlate, VehicleType.CAR)
+
+class Bike(Vehicle):
+    def __init__(self, licensePlate):
+        super().__init__(licensePlate, VehicleType.BIKE)
+
+class Truck(Vehicle):
+    def __init__(self, licensePlate):
+        super().__init__(licensePlate, VehicleType.TRUCK)
+
+class ParkingSpot:
+    def __init__(self, spotNumber):
+        self.spotNumber = spotNumber
+        self.vehicleType = VehicleType.CAR
+        self.parkedVehicle = None
+
+    def isAvailable(self):
+        return self.parkedVehicle is None
     
-    def addSlot(self, slot):
-        self.slots[slot.vehicleType].append(slot)
+    def parkVehicle(self, vehicle: Vehicle):
+        if(self.isAvailable() and vehicle.getType() == self.vehicleType):
+            self.parkedVehicle = vehicle
+        else:
+            raise ValueError("Invalid vehicle type or spot already occupied")
 
-    def getAvailableSlot(self, vehicleType):
-        for slot in self.slots[vehicleType]:
-            if(slot.isAvailable):
-                return slot
+    def unparkVehicle(self):
+        self.parkedVehicle = None
+    
+    def getVehicleType(self):
+        return self.vehicleType
+    
+    def getParkedVehicle(self):
+        return self.parkedVehicle
+    
+    def getSpotNumber(self):
+        return self.spotNumber
+class Level:
+    def __init__(self, floor, numSpots):
+        self.floor = floor
+        self.parkingSpots = [ParkingSpot(i) for i in range(numSpots)]
+    
+    def parkVehicle(self, vehicle: Vehicle):
+        for spot in self.parkingSpots:
+            if(spot.isAvailable() and spot.getVehicleType() == vehicle.getType()):
+                spot.parkVehicle(vehicle)
+                return True
+        return False
+
+    def unparkVehicle(self, vehicle: Vehicle):
+        for spot in self.parkingSpots:
+            if(not spot.isAvailable() and spot.getParkedVehicle() == vehicle):
+                spot.unparkVehicle()
+                return True
+        return False
+
+    def displayAvailableSpots(self):
+        print(f"Level {self.floor} Availability:")
+        for spot in self.parkingSpots:
+            print(f"Spot {spot.getSpotNumber()}: {'Available' if spot.isAvailable() else 'Occupied'}")
         
-        return None
-
 class ParkingLot:
-    def __init__(self, name):
-        self.name = name
-        self.floors = []
+    def __init__(self):
+        self.levels = []
 
-    def addFloor(self, floor):
-        self.floors.append(floor)
-
-    def parkVehicle(self, vehicle):
-        for floor in self.floors:
-            slot = floor.getAvailableSlot(vehicle.vehicleType)
-            if(slot):
-                slot.isAvailable = False
-                return Ticket(vehicle, slot)
-        
-        return None
-
-    def unparkVehicle(self, ticket):
-        ticket.slot.isAvailable = True
-        return Payment(ticket)
-
-class Ticket:
-    def __init__(self, vehicle, slot):
-        self.tickedId = str(uuid.uuid4())
-        self.issuedAt = datetime.now()
-        self.vehicle = vehicle
-        self.slot = slot
-
-class Payment:
-    def __init__(self, ticket, ratePerHour=10):
-        self.ticket = ticket
-        self.paidAt = datetime.now()
-        self.amount = self._calculateAmount(ratePerHour)
-
-    def _calculateAmount(self, rate):
-        duration = self.paidAt - self.ticket.issuedAt
-        hours = max(1, int(duration.total_seconds() / 3600))
-        return rate * hours
+    def addLevel(self, level: Level):
+        self.levels.append(level)
     
-lot = ParkingLot("GS")
-floor = ParkingFloor(1)
+    def parkVehicle(self, vehicle: Vehicle):
+        for level in self.levels:
+            if(level.parkVehicle(vehicle)):
+                return True
+        return False
+    
+    def unparkVehicle(self, vehicle: Vehicle):
+        for level in self.levels:
+            if(level.unparkVehicle(vehicle)):
+                return True
+        else:
+            return False
+        
+    def displayAvailability(self):
+        for level in self.levels:
+            level.displayAvailableSpots()
+        print()
 
-for i in range(2):
-    floor.addSlot(ParkingSlot(f"CAR-{i + 1}", VehicleType.CAR))
+parkingLot = ParkingLot()
+parkingLot.addLevel(Level(1, 2))
+parkingLot.addLevel(Level(2, 2))   
 
-lot.addFloor(floor)
+car = Car("ABC123")
+# truck = Truck("DEF456")
+# bike = Bike("GHI789")
+car2 = Car("DEF456")
 
-car = Vehicle("Agent47", VehicleType.CAR)
-ticket1 = lot.parkVehicle(car)
+parkingLot.displayAvailability()
 
-if(ticket1):
-    time.sleep(1)
-    payment = lot.unparkVehicle(ticket1)
+parkingLot.parkVehicle(car)
+parkingLot.parkVehicle(car2)
 
-    print(f"Vehicle: {ticket1.vehicle.licensePlate} parked at {ticket1.slot.slotId}")
-    print(f"Payment: ${payment.amount} for {(payment.paidAt - ticket1.issuedAt).seconds} seconds")
+parkingLot.displayAvailability()
 
-else:
-    print("Couldn't park the vehicle!")
+parkingLot.unparkVehicle(car2)
+parkingLot.displayAvailability()
+
