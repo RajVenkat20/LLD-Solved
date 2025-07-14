@@ -1,0 +1,17 @@
+Core Requirements
+1. The system should allow users to book rooms, check-in and check-out.
+2. Should support different types of room like Single, Double, Deluxe, and Suite.
+3. Should support different types of payment methods such as cash, and credit.
+5. Scalable to a large number of rooms and guests.
+6. Should support concurrent bookings and ensure data consistency
+7. Hotel staff should be able to manage guest information, room assignments, and billing.
+
+Classes
+1. ReservationStatus - Enum to define the status of a reservation.
+2. RoomStatus - Enum to define the status of a room.
+3. RoomType - Enum to define the type of a room.
+4. Payment - Interface providing an abstract method for payments.
+5. CashPayment, CardPayment - Concrete implementations of Payment interface.
+6. Reservation - Represents a reservation made by a guest for a room. It contains properties such as ID, guest, room, check-in date, check-out date, and status. Provides a method to cancel a reservation
+7. Room - Represents a room in the hotel, with properties like ID, room type, price, and status. Provides methods to book, check-in, and check-out of the room.
+8. HotelManagementSystem - The main controller that provides methods to add guests and rooms, book room, cancel reservation, check-in, check-out, and process payments.
